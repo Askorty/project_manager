@@ -1,3 +1,10 @@
+<%= link_to "Создать новый проект", new_project_path %><br><br>
+
 <% @projects.each do |project| %>
-  <%= project.title %>
+  <div>
+    <%= link_to project.title, project_path(project) %> |
+    <%= link_to "Редактировать", edit_project_path(project) %> |
+    <%= button_to "Удалить", project_path(project), method: :delete %>
+  </div>
+  <hr>
 <% end %>

@@ -1,0 +1,20 @@
+<h1>Редактировать проект</h1>
+
+<%= form_with model: @project do |form| %>
+  <div>
+    <%= form.label :title, "Название" %><br>
+    <%= form.text_field :title %>
+  </div>
+
+  <div>
+    <%= form.label :description, "Описание" %><br>
+    <%= form.text_area :description %>
+  </div>
+
+  <div>
+    <%= form.submit "Сохранить" %>
+  </div>
+<% end %>
+
+<br>
+<%= link_to "Назад", project_path(@project) %>
