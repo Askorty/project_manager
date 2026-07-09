@@ -12,3 +12,87 @@
 
 <br><br>
 <%= button_to "Удалить проект", project_path(@project), method: :delete, data: { turbo_confirm: "Точно удалить?" } %>
+
+<hr>
+<h3>Задачи</h3>
+
+<!-- Форма создания новой задачи -->
+<%= form_with model: [ @project, @project.tasks.build ] do |form| %>
+  <%= form.text_field :title, placeholder: "Название задачи" %>
+  <%= form.text_area :description, placeholder: "Описание задачи" %>
+  
+  <%= form.select :status, ["To Do", "In Progress", "In Testing", "Rejected", "Done"] %>
+  
+  <%= form.submit "Добавить задачу" %>
+<% end %>
+
+<br>
+
+<!-- Канбан-доска -->
+<div style="display: flex; gap: 20px; align-items: flex-start; overflow-x: auto;">
+  
+  <% ["To Do", "In Progress", "In Testing", "Rejected", "Done"].each do |column_status| %>
+    
+    <!-- Колонка одного статуса -->
+    <div style="flex: 1; min-width: 250px; background-color: #f4f5f7; padding: 10px; border-radius: 8px;">
+      <h3 style="text-align: center;"><%= column_status %></h3>
+      
+      <!-- Фильтруем задачи текущего проекта по статусу текущей колонки -->
+      <% @project.tasks.where(status: column_status).each do |task| %>
+        <% if task.persisted? %>
+          
+          <!-- Карточка задачи -->
+          <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; background-color: white; border-radius: 5px;">
+            
+            <!-- Блок 1: ПРОСМОТР ЗАДАЧИ -->
+            <div id="view_task_<%= task.id %>" style="margin-bottom: 10px;">
+              <strong><%= task.title %></strong>
+              <p style="color: #666; font-size: 0.9em; margin: 5px 0;"><%= task.description %></p>
+              
+              <button onclick="document.getElementById('view_task_<%= task.id %>').style.display='none'; document.getElementById('edit_task_<%= task.id %>').style.display='block';">
+                Редактировать
+              </button>
+            </div>
+
+            <!-- Блок 2: РЕДАКТИРОВАНИЕ ЗАДАЧИ (скрыт по умолчанию) -->
+            <div id="edit_task_<%= task.id %>" style="display: none; margin-bottom: 10px;">
+              <%= form_with model: [@project, task] do |form| %>
+                <%= form.text_field :title, value: task.title, style: "width: 100%; margin-bottom: 5px;", placeholder: "Название задачи" %>
+                <%= form.text_area :description, value: task.description, style: "width: 100%; margin-bottom: 5px;", placeholder: "Описание задачи" %>
+                
+                <div style="display: flex; gap: 5px;">
+                  <%= form.submit "Сохранить" %>
+                  <button type="button" onclick="document.getElementById('edit_task_<%= task.id %>').style.display='none'; document.getElementById('view_task_<%= task.id %>').style.display='block';">
+                    Отмена
+                  </button>
+                </div>
+              <% end %>
+            </div>
+
+            <!-- Блок кнопок для изменения статуса -->
+            <div style="display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 10px;">
+              <% case task.status %>
+              <% when "To Do" %>
+                <%= button_to "В работу", project_task_path(@project, task), method: :patch, params: { task: { status: "In Progress" } } %>
+              <% when "In Progress" %>
+                <%= button_to "В ожидание", project_task_path(@project, task), method: :patch, params: { task: { status: "To Do" } } %>
+                <%= button_to "На тест", project_task_path(@project, task), method: :patch, params: { task: { status: "In Testing" } } %>
+              <% when "In Testing" %>
+                <%= button_to "Готово", project_task_path(@project, task), method: :patch, params: { task: { status: "Done" } } %>
+                <%= button_to "Брак", project_task_path(@project, task), method: :patch, params: { task: { status: "Rejected" } } %>
+              <% when "Rejected" %>
+                <%= button_to "В работу", project_task_path(@project, task), method: :patch, params: { task: { status: "In Progress" } } %>
+              <% end %>
+            </div>
+
+            <!-- Кнопка удаления -->
+            <%= button_to "Удалить задачу", project_task_path(@project, task), method: :delete, form: { style: "margin-top: 10px;" } %>
+          </div>
+
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+</div>

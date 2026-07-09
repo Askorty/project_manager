@@ -1,0 +1,12 @@
+ru:
+  activerecord:
+    attributes:
+      task:
+        title: "Название"
+        description: "Описание"
+      project:
+        title: "Название"
+        description: "Описание"
+  errors:
+    messages:
+      blank: "не может быть пустым"

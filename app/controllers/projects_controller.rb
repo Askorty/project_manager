@@ -30,6 +30,7 @@ class ProjectsController < ApplicationController
     if @project.update(project_params)
       redirect_to @project, notice: "Проект обновлен."
     else
+      flash.now[:alert] = "Ошибка: #{@project.errors.full_messages.join(', ')}"
       render :edit, status: :unprocessable_entity
     end
   end

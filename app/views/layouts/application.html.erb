@@ -30,6 +30,14 @@
       <%= link_to "Вход", new_user_session_path%>
       <%= link_to "Регистрация", new_user_registration_path%>
     <% end %>
+
+    <!-- Блок вывода уведомлений об ошибках и успехах -->
+    <% flash.each do |key, message| %>
+      <div style="padding: 10px; margin: 10px 0; border: 1px solid #ccc; background-color: #f8f9fa;">
+        <%= message %>
+      </div>
+    <% end %>
+    
     <%= yield %>
   </body>
 </html>

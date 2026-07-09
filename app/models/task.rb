@@ -3,11 +3,12 @@ class Task < ApplicationRecord
 
   # 1. Проверяем, что статус берется строго из списка
   validates :status, inclusion: { in: [ "To Do", "In Progress", "In Testing", "Rejected", "Done" ] }
-
+  validates :title, :description, presence: true
   # 2. Указываем Rails запустить нашу собственную проверку переходов
   validate :check_status_transition
 
   def check_status_transition
+    return unless status_changed?
     case status_was
     when "Done"
       errors.add(:status, "статус Done нельзя изменить")
