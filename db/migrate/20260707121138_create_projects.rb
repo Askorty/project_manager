@@ -1,10 +1,10 @@
 class CreateProjects < ActiveRecord::Migration[8.1]
   def change
-    create_table :projects, id: :uuid do |t|
+    create_table :projects, id: :string do |t|
       t.string :title
       t.text :description
-      # Добавили type: :uuid, чтобы база ожидала UUID, а не число
-      t.references :user, type: :uuid, null: false, foreign_key: true
+      # Поменял type: :string, чтобы база ожидала string, а не неизвестный uuid
+      t.references :user, type: :string, null: false, foreign_key: true
 
       t.timestamps
     end
