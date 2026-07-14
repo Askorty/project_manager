@@ -1,24 +1,47 @@
-# README
+# Менеджер проектов 
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Веб-приложение для управления задачами по методологии Канбан.
 
-Things you may want to cover:
+## Технологический стек
+* **Backend:** Ruby on Rails 8.0
+* **База данных:** SQLite
+* **Frontend:** Tailwind CSS v4, DaisyUI, Hotwire (Turbo)
+* **Аутентификация:** Devise
 
-* Ruby version
+## Локальное развертывание (Как запустить проект)
 
-* System dependencies
+Для запуска приложения на вашем компьютере убедитесь, что у вас установлен **Ruby**.
 
-* Configuration
+**Шаг 1:** Клонируйте репозиторий и перейдите в папку с проектом:
+```bash
+git clone [https://github.com/Askorty/project_manager.git](https://github.com/Askorty/project_manager.git)
+cd project_manager
+```
 
-* Database creation
+**Шаг 2:** Установите все необходимые зависимости (библиотеки):
+```bash
+bundle install
+```
 
-* Database initialization
+**Шаг 3:** Подготовьте базу данных (создание базы и применение миграций):
+```bash
+rails db:prepare
+```
 
-* How to run the test suite
+**Шаг 4:** Запустите локальный сервер разработки:
+```bash
+bin/dev
+```
 
-* Services (job queues, cache servers, search engines, etc.)
+## Тестирование
 
-* Deployment instructions
+Проект покрыт автоматическими тестами. Тестовый стек включает в себя:
+* **RSpec** — основной фреймворк для тестирования.
+* **Shoulda-matchers** — для тестирования моделей и связей БД.
+* **Capybara** — для системных (End-to-End) тестов интерфейса.
+* **Database Cleaner** — для поддержания чистоты тестовой базы данных.
 
-* ...
+Для запуска всего набора тестов выполните в терминале команду:
+```bash
+bundle exec rspec
+```
