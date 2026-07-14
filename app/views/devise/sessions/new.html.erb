@@ -1,0 +1,48 @@
+<div class="flex justify-center items-center min-h-[75vh]">
+  <div class="card w-full max-w-md shadow-2xl bg-base-100 border border-base-200">
+    <div class="card-body p-8">
+      
+      <div class="flex justify-center mb-4">
+        <!-- Иконка замка -->
+        <div class="bg-primary/10 p-4 rounded-full">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+        </div>
+      </div>
+
+      <h2 class="card-title text-3xl font-bold justify-center mb-6 text-base-content">С возвращением!</h2>
+
+      <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "flex flex-col gap-4" }) do |f| %>
+        
+        <div class="form-control">
+          <%= f.label :email, "Email", class: "label label-text font-bold" %>
+          <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "input input-bordered w-full", placeholder: "your@email.com" %>
+        </div>
+
+        <div class="form-control">
+          <%= f.label :password, "Пароль", class: "label label-text font-bold" %>
+          <%= f.password_field :password, autocomplete: "current-password", class: "input input-bordered w-full", placeholder: "••••••••" %>
+        </div>
+
+        <% if devise_mapping.rememberable? %>
+          <div class="form-control mt-2">
+            <label class="label cursor-pointer justify-start gap-3 w-max">
+              <%= f.check_box :remember_me, class: "checkbox checkbox-primary checkbox-sm" %>
+              <span class="label-text">Запомнить меня</span>
+            </label>
+          </div>
+        <% end %>
+
+        <div class="form-control mt-4">
+          <%= f.submit "Войти", class: "btn btn-primary w-full text-lg shadow-md" %>
+        </div>
+      <% end %>
+
+      <div class="divider text-base-content/40 mt-6">или</div>
+      
+      <div class="flex flex-col gap-2 text-center mt-2 text-sm">
+        <%= render "devise/shared/links" %>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,52 @@
+<div class="flex justify-center items-center min-h-[75vh]">
+  <div class="card w-full max-w-md shadow-2xl bg-base-100 border border-base-200 mt-8 mb-8">
+    <div class="card-body p-8">
+      
+      <div class="flex justify-center mb-4">
+        <!-- Иконка нового пользователя -->
+        <div class="bg-secondary/10 p-4 rounded-full">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" /></svg>
+        </div>
+      </div>
+
+      <h2 class="card-title text-3xl font-bold justify-center mb-6 text-base-content">Регистрация</h2>
+
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "flex flex-col gap-4" }) do |f| %>
+        
+        <!-- Вывод ошибок валидации Devise -->
+        <%= render "devise/shared/error_messages", resource: resource %>
+
+        <div class="form-control">
+          <%= f.label :email, "Email", class: "label label-text font-bold" %>
+          <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "input input-bordered w-full", placeholder: "your@email.com" %>
+        </div>
+
+        <div class="form-control">
+          <%= f.label :password, class: "label label-text font-bold flex justify-between" do %>
+            Пароль
+            <% if @minimum_password_length %>
+              <span class="text-xs font-normal text-base-content/50">Мин. <%= @minimum_password_length %> символов</span>
+            <% end %>
+          <% end %>
+          <%= f.password_field :password, autocomplete: "new-password", class: "input input-bordered w-full", placeholder: "••••••••" %>
+        </div>
+
+        <div class="form-control">
+          <%= f.label :password_confirmation, "Подтвердите пароль", class: "label label-text font-bold" %>
+          <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "input input-bordered w-full", placeholder: "••••••••" %>
+        </div>
+
+        <div class="form-control mt-4">
+          <%= f.submit "Создать аккаунт", class: "btn btn-secondary w-full text-lg shadow-md" %>
+        </div>
+      <% end %>
+
+      <div class="divider text-base-content/40 mt-6">уже есть аккаунт?</div>
+      
+      <div class="flex flex-col gap-2 text-center mt-2 text-sm">
+        <%= render "devise/shared/links" %>
+      </div>
+
+    </div>
+  </div>
+</div>

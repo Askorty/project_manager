@@ -1,0 +1,25 @@
+<%= form_with(model: project, class: "flex flex-col gap-4") do |form| %>
+  <% if project.errors.any? %>
+    <div class="alert alert-error shadow-sm mb-4">
+      <ul>
+        <% project.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-control">
+    <%= form.label :title, "Название проекта", class: "label label-text font-bold" %>
+    <%= form.text_field :title, class: "input input-bordered w-full" %>
+  </div>
+
+  <div class="form-control">
+    <%= form.label :description, "Описание", class: "label label-text font-bold" %>
+    <%= form.text_area :description, class: "textarea textarea-bordered w-full h-24" %>
+  </div>
+
+  <div class="mt-6 flex gap-2">
+    <%= form.submit "Сохранить проект", class: "btn btn-primary" %>
+  </div>
+<% end %>

@@ -1,98 +1,192 @@
-<h1><%= @project.title %></h1>
-
-<h2><%= @project.created_at %></h2>
-
-<h2><%= @project.user.email %></h2>
-
-<p><%= @project.description %></p>
-
-<hr>
-<%= link_to "Редактировать", edit_project_path(@project) %> |
-<%= link_to "Назад к списку", projects_path %>
-
-<br><br>
-<%= button_to "Удалить проект", project_path(@project), method: :delete, data: { turbo_confirm: "Точно удалить?" } %>
-
-<hr>
-<h3>Задачи</h3>
-
-<!-- Форма создания новой задачи -->
-<%= form_with model: [ @project, @project.tasks.build ] do |form| %>
-  <%= form.text_field :title, placeholder: "Название задачи" %>
-  <%= form.text_area :description, placeholder: "Описание задачи" %>
+<div class="container mx-auto p-4 max-w-[98%] mt-8">
   
-  <%= form.select :status, ["To Do", "In Progress", "In Testing", "Rejected", "Done"] %>
-  
-  <%= form.submit "Добавить задачу" %>
-<% end %>
-
-<br>
-
-<!-- Канбан-доска -->
-<div style="display: flex; gap: 20px; align-items: flex-start; overflow-x: auto;">
-  
-  <% ["To Do", "In Progress", "In Testing", "Rejected", "Done"].each do |column_status| %>
+  <!-- 1. ШАПКА И НАСТРОЙКИ ПРОЕКТА -->
+  <div class="flex flex-col sm:flex-row justify-between items-center mb-6 bg-base-200 p-4 rounded-box shadow-sm gap-4">
+    <div class="flex items-center gap-2">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" /></svg>
+      <h1 class="text-3xl font-bold text-base-content"><%= @project.title %></h1>
+    </div>
     
-    <!-- Колонка одного статуса -->
-    <div style="flex: 1; min-width: 250px; background-color: #f4f5f7; padding: 10px; border-radius: 8px;">
-      <h3 style="text-align: center;"><%= column_status %></h3>
+    <div class="form-control border-l border-base-300 pl-4">
+      <label class="label cursor-pointer gap-4">
+        <span class="label-text font-medium text-base-content/70">Редактировать проект</span> 
+        <input type="checkbox" class="toggle toggle-primary" 
+               onchange="document.getElementById('project-read').classList.toggle('hidden'); 
+                         document.getElementById('project-edit').classList.toggle('hidden');" />
+      </label>
+    </div>
+  </div>
+
+  <!-- Режим чтения проекта -->
+  <div id="project-read" class="bg-base-100 p-4 mb-8">
+    <p class="text-lg text-base-content/80 whitespace-pre-wrap"><%= @project.description %></p>
+    <div class="mt-4">
+      <%= link_to '⬅️ Назад к списку проектов', projects_path, class: 'btn btn-ghost btn-sm' %>
+    </div>
+  </div>
+
+  <!-- Режим редактирования проекта (Скрыт) -->
+  <div id="project-edit" class="hidden card bg-base-100 shadow-xl border-2 border-primary mb-8">
+    <div class="card-body">
+      <h2 class="card-title mb-4">Настройки проекта</h2>
+      <%= render "form", project: @project %>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+
+  <!-- 2. БЛОК ЗАДАЧ -->
+
+  <div class="mt-8">
+    
+    <!-- Заголовок задач и кнопка вызова формы -->
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-2xl font-bold">Канбан-доска</h3>
+      <button class="btn btn-primary btn-sm" onclick="document.getElementById('new-task-form').classList.toggle('hidden')">
+        ➕ Создать задачу
+      </button>
+    </div>
+
+    <!-- ВЛОЖЕННАЯ ФОРМА ДОБАВЛЕНИЯ ЗАДАЧИ (Скрыта по умолчанию) -->
+    <div id="new-task-form" class="hidden bg-base-200 p-6 rounded-box mb-8 border border-base-300 shadow-inner">
+      <h4 class="font-bold mb-4 text-lg">Новая задача</h4>
       
-      <!-- Фильтруем задачи текущего проекта по статусу текущей колонки -->
-      <% @project.tasks.where(status: column_status).each do |task| %>
-        <% if task.persisted? %>
-          
-          <!-- Карточка задачи -->
-          <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; background-color: white; border-radius: 5px;">
-            
-            <!-- Блок 1: ПРОСМОТР ЗАДАЧИ -->
-            <div id="view_task_<%= task.id %>" style="margin-bottom: 10px;">
-              <strong><%= task.title %></strong>
-              <p style="color: #666; font-size: 0.9em; margin: 5px 0;"><%= task.description %></p>
-              
-              <button onclick="document.getElementById('view_task_<%= task.id %>').style.display='none'; document.getElementById('edit_task_<%= task.id %>').style.display='block';">
-                Редактировать
-              </button>
-            </div>
-
-            <!-- Блок 2: РЕДАКТИРОВАНИЕ ЗАДАЧИ (скрыт по умолчанию) -->
-            <div id="edit_task_<%= task.id %>" style="display: none; margin-bottom: 10px;">
-              <%= form_with model: [@project, task] do |form| %>
-                <%= form.text_field :title, value: task.title, style: "width: 100%; margin-bottom: 5px;", placeholder: "Название задачи" %>
-                <%= form.text_area :description, value: task.description, style: "width: 100%; margin-bottom: 5px;", placeholder: "Описание задачи" %>
-                
-                <div style="display: flex; gap: 5px;">
-                  <%= form.submit "Сохранить" %>
-                  <button type="button" onclick="document.getElementById('edit_task_<%= task.id %>').style.display='none'; document.getElementById('view_task_<%= task.id %>').style.display='block';">
-                    Отмена
-                  </button>
-                </div>
-              <% end %>
-            </div>
-
-            <!-- Блок кнопок для изменения статуса -->
-            <div style="display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 10px;">
-              <% case task.status %>
-              <% when "To Do" %>
-                <%= button_to "В работу", project_task_path(@project, task), method: :patch, params: { task: { status: "In Progress" } } %>
-              <% when "In Progress" %>
-                <%= button_to "В ожидание", project_task_path(@project, task), method: :patch, params: { task: { status: "To Do" } } %>
-                <%= button_to "На тест", project_task_path(@project, task), method: :patch, params: { task: { status: "In Testing" } } %>
-              <% when "In Testing" %>
-                <%= button_to "Готово", project_task_path(@project, task), method: :patch, params: { task: { status: "Done" } } %>
-                <%= button_to "Брак", project_task_path(@project, task), method: :patch, params: { task: { status: "Rejected" } } %>
-              <% when "Rejected" %>
-                <%= button_to "В работу", project_task_path(@project, task), method: :patch, params: { task: { status: "In Progress" } } %>
-              <% end %>
-            </div>
-
-            <!-- Кнопка удаления -->
-            <%= button_to "Удалить задачу", project_task_path(@project, task), method: :delete, form: { style: "margin-top: 10px;" } %>
+      <%= form_with(model: [@project, Task.new], class: "flex flex-col gap-4") do |f| %>
+        <div class="flex flex-col md:flex-row gap-4">
+          <div class="form-control w-full">
+            <%= f.label :title, "Название", class: "label font-semibold" %>
+            <%= f.text_field :title, class: "input input-bordered w-full", required: true %>
           </div>
-
-        <% end %>
+          <div class="form-control w-full md:w-1/3">
+            <%= f.label :status, "Статус", class: "label font-semibold" %>
+            <%= f.select :status, ['To Do', 'In Progress', 'In Testing', 'Done', 'Rejected'], {}, class: "select select-bordered w-full" %>
+          </div>
+        </div>
+        <div class="form-control w-full">
+          <%= f.label :description, "Описание задачи", class: "label font-semibold" %>
+          <%= f.text_area :description, class: "textarea textarea-bordered w-full" %>
+        </div>
+        <div class="mt-2">
+          <%= f.submit "Сохранить задачу", class: "btn btn-success" %>
+        </div>
       <% end %>
     </div>
-  <% end %>
-</div>
 
+    <!-- КАНБАН-ДОСКА (Постоянно выводит добавленные задачи) -->
+    <% columns = [
+      { status: 'To Do', name: 'К выполнению', color: 'badge-neutral' },
+      { status: 'In Progress', name: 'В процессе', color: 'badge-primary' },
+      { status: 'In Testing', name: 'На тестировании', color: 'badge-warning' },
+      { status: 'Done', name: 'Готово', color: 'badge-success' },
+      { status: 'Rejected', name: 'Отклонено', color: 'badge-error' }
+    ] %>
+
+    <!-- Измененный контейнер: теперь это сетка из 5 колонок без скролла -->
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-start pb-6">
+      <% columns.each do |col| %>
+        
+        <!-- Колонка теперь гибкая и занимает доступное место -->
+        <div class="bg-base-200/50 rounded-box p-3 border border-base-300 flex flex-col gap-3">
+          
+          <!-- Шапка колонки -->
+          <div class="flex justify-between items-center border-b border-base-300 pb-2 mb-2">
+            <h4 class="font-bold text-sm text-base-content/80 leading-tight"><%= col[:name] %></h4>
+            <div class="badge <%= col[:color] %> badge-sm font-bold">
+              <%= @project.tasks.where(status: col[:status]).count %>
+            </div>
+          </div>
+
+          <!-- Карточки задач в этой колонке -->
+          <% @project.tasks.where(status: col[:status]).each do |task| %>
+            
+            <div class="card bg-base-100 shadow-sm border border-base-200 group flex flex-col justify-between h-full relative">
+              
+              <!-- Кнопки управления (появляются при наведении в правом верхнем углу) -->
+              <div class="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <!-- Развернуть / Редактировать (открывает модалку) -->
+                <button class="btn btn-xs btn-square btn-ghost text-primary min-h-0 h-6 w-6 bg-base-100 shadow-sm" onclick="document.getElementById('task_modal_<%= task.id %>').showModal()" title="Читать / Редактировать">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+                </button>
+                <!-- Удалить -->
+                <%= button_to project_task_path(@project, task), method: :delete, data: { turbo_confirm: 'Точно удалить?' }, class: "btn btn-xs btn-square btn-ghost text-error min-h-0 h-6 w-6 bg-base-100 shadow-sm", title: "Удалить" do %>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                <% end %>
+              </div>
+
+              <div class="card-body p-3 pb-2 pt-8"> <!-- Отступ сверху, чтобы иконки не закрыли текст -->
+                <p class="font-bold text-xs leading-tight"><%= task.title %></p>
+                <% if task.description.present? %>
+                  <p class="text-[10px] text-base-content/60 mt-2 line-clamp-3"><%= task.description %></p>
+                <% end %>
+              </div>
+
+              <!-- Кнопки управления статусом из прошлого шага -->
+              <div class="bg-base-200/50 p-2 mt-auto border-t border-base-200 flex flex-col gap-1 rounded-b-xl">
+                <% case task.status %>
+                <% when "To Do" %>
+                  <%= button_to "В работу", project_task_path(@project, task), method: :patch, params: { task: { status: "In Progress" } }, class: "btn btn-xs btn-primary w-full text-[10px]" %>
+                <% when "In Progress" %>
+                  <div class="flex gap-1">
+                    <%= button_to "Назад", project_task_path(@project, task), method: :patch, params: { task: { status: "To Do" } }, class: "btn btn-xs btn-outline flex-1 text-[10px]" %>
+                    <%= button_to "Тест", project_task_path(@project, task), method: :patch, params: { task: { status: "In Testing" } }, class: "btn btn-xs btn-warning flex-1 text-[10px]" %>
+                  </div>
+                <% when "In Testing" %>
+                  <div class="flex gap-1">
+                    <%= button_to "Отклон.", project_task_path(@project, task), method: :patch, params: { task: { status: "Rejected" } }, class: "btn btn-xs btn-error flex-1 text-[10px]" %>
+                    <%= button_to "Готово", project_task_path(@project, task), method: :patch, params: { task: { status: "Done" } }, class: "btn btn-xs btn-success flex-1 text-[10px]" %>
+                  </div>
+                <% when "Rejected" %>
+                  <%= button_to "В работу", project_task_path(@project, task), method: :patch, params: { task: { status: "In Progress" } }, class: "btn btn-xs btn-primary w-full text-[10px]" %>
+                <% when "Done" %>
+                  <div class="text-[10px] font-bold text-success text-center">Завершено</div>
+                <% end %>
+              </div>
+            </div>
+
+            <!-- ============================================== -->
+            <!-- МОДАЛЬНОЕ ОКНО РЕДАКТИРОВАНИЯ ЭТОЙ ЗАДАЧИ      -->
+            <!-- ============================================== -->
+            <dialog id="task_modal_<%= task.id %>" class="modal">
+              <div class="modal-box w-11/12 max-w-3xl">
+                <h3 class="font-bold text-2xl mb-6">✏️ Изменить задачу</h3>
+                
+                <%= form_with(model: [@project, task], class: "flex flex-col gap-4") do |f| %>
+                  <div class="flex flex-col md:flex-row gap-4">
+                    <div class="form-control w-full">
+                      <%= f.label :title, "Название", class: "label font-semibold" %>
+                      <%= f.text_field :title, class: "input input-bordered w-full text-lg", required: true %>
+                    </div>
+                    <div class="form-control w-full md:w-1/3">
+                      <%= f.label :status, "Статус", class: "label font-semibold" %>
+                      <%= f.select :status, ['To Do', 'In Progress', 'In Testing', 'Done', 'Rejected'], {}, class: "select select-bordered w-full" %>
+                    </div>
+                  </div>
+                  
+                  <div class="form-control w-full">
+                    <%= f.label :description, "Описание", class: "label font-semibold" %>
+                    <!-- Поле описания высокое (h-48), чтобы влез любой объем текста -->
+                    <%= f.text_area :description, class: "textarea textarea-bordered w-full h-48 text-base leading-relaxed" %>
+                  </div>
+                  
+                  <div class="modal-action mt-6 flex justify-between">
+                    <button type="button" class="btn btn-ghost" onclick="document.getElementById('task_modal_<%= task.id %>').close()">Закрыть</button>
+                    <%= f.submit "Сохранить изменения", class: "btn btn-success" %>
+                  </div>
+                <% end %>
+              </div>
+              
+              <!-- Клик по фону вокруг тоже закроет модалку -->
+              <form method="dialog" class="modal-backdrop">
+                <button>close</button>
+              </form>
+            </dialog>
+
+          <% end %>
+
+        </div>
+      <% end %>
+    </div>
+
+  </div>
 </div>

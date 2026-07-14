@@ -1,0 +1,50 @@
+<div class="flex justify-center items-center min-h-[75vh]">
+  <div class="card w-full max-w-md shadow-2xl bg-base-100 border border-base-200">
+    <div class="card-body p-8">
+      
+      <div class="flex justify-center mb-4">
+        <!-- Иконка обновления пароля -->
+        <div class="bg-warning/10 p-4 rounded-full">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-warning" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+        </div>
+      </div>
+
+      <h2 class="card-title text-2xl font-bold justify-center mb-6 text-base-content text-center">Создание нового пароля</h2>
+
+      <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put, class: "flex flex-col gap-4" }) do |f| %>
+        
+        <!-- Вывод ошибок Devise -->
+        <%= render "devise/shared/error_messages", resource: resource %>
+        
+        <!-- Скрытое поле с токеном из ссылки -->
+        <%= f.hidden_field :reset_password_token %>
+
+        <div class="form-control">
+          <%= f.label :password, class: "label label-text font-bold flex justify-between" do %>
+            Новый пароль
+            <% if @minimum_password_length %>
+              <span class="text-xs font-normal text-base-content/50">Мин. <%= @minimum_password_length %> символов</span>
+            <% end %>
+          <% end %>
+          <%= f.password_field :password, autofocus: true, autocomplete: "new-password", class: "input input-bordered w-full", placeholder: "••••••••" %>
+        </div>
+
+        <div class="form-control">
+          <%= f.label :password_confirmation, "Подтвердите новый пароль", class: "label label-text font-bold" %>
+          <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "input input-bordered w-full", placeholder: "••••••••" %>
+        </div>
+
+        <div class="form-control mt-4">
+          <%= f.submit "Изменить пароль", class: "btn btn-warning w-full text-lg shadow-md" %>
+        </div>
+      <% end %>
+
+      <div class="divider text-base-content/40 mt-6">или</div>
+      
+      <div class="flex flex-col gap-2 text-center mt-2 text-sm">
+        <%= render "devise/shared/links" %>
+      </div>
+
+    </div>
+  </div>
+</div>
