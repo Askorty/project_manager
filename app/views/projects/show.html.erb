@@ -1,5 +1,4 @@
 <div class="container mx-auto p-4 max-w-[98%] mt-8">
-  
   <div class="flex flex-col sm:flex-row justify-between items-center mb-6 bg-base-200 p-4 rounded-box shadow-sm gap-4">
     <div class="flex items-center gap-2">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" /></svg>
@@ -39,6 +38,7 @@
         ➕ Создать задачу
       </button>
     </div>
+
     <div id="new-task-form" class="hidden bg-base-200 p-6 rounded-box mb-8 border border-base-300 shadow-inner">
       <h4 class="font-bold mb-4 text-lg">Новая задача</h4>
       
@@ -50,7 +50,7 @@
           </div>
           <div class="form-control w-full md:w-1/3">
             <%= f.label :status, "Статус", class: "label font-semibold" %>
-            <%= f.select :status, ['To Do', 'In Progress', 'In Testing', 'Done', 'Rejected'], {}, class: "select select-bordered w-full" %>
+            <%= f.select :status, [['To Do', 'to_do'], ['In Progress', 'in_progress'], ['In Testing', 'in_testing'], ['Done', 'done'], ['Rejected', 'rejected']], {}, class: "select select-bordered w-full" %>
           </div>
         </div>
         <div class="form-control w-full">
@@ -64,18 +64,16 @@
     </div>
 
     <% columns = [
-      { status: 'To Do', name: 'К выполнению', color: 'badge-neutral' },
-      { status: 'In Progress', name: 'В процессе', color: 'badge-primary' },
-      { status: 'In Testing', name: 'На тестировании', color: 'badge-warning' },
-      { status: 'Done', name: 'Готово', color: 'badge-success' },
-      { status: 'Rejected', name: 'Отклонено', color: 'badge-error' }
+      { status: 'to_do', name: 'К выполнению', color: 'badge-neutral' },
+      { status: 'in_progress', name: 'В процессе', color: 'badge-primary' },
+      { status: 'in_testing', name: 'На тестировании', color: 'badge-warning' },
+      { status: 'done', name: 'Готово', color: 'badge-success' },
+      { status: 'rejected', name: 'Отклонено', color: 'badge-error' }
     ] %>
 
     <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-start pb-6">
       <% columns.each do |col| %>
-        
         <div class="bg-base-200/50 rounded-box p-3 border border-base-300 flex flex-col gap-3">
-          
           <div class="flex justify-between items-center border-b border-base-300 pb-2 mb-2">
             <h4 class="font-bold text-sm text-base-content/80 leading-tight"><%= col[:name] %></h4>
             <div class="badge <%= col[:color] %> badge-sm font-bold">
@@ -84,9 +82,7 @@
           </div>
 
           <% @project.tasks.where(status: col[:status]).each do |task| %>
-            
             <div class="card bg-base-100 shadow-sm border border-base-200 group flex flex-col justify-between h-full relative">
-              
               <div class="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                 <button class="btn btn-xs btn-square btn-ghost text-primary min-h-0 h-6 w-6 bg-base-100 shadow-sm" onclick="document.getElementById('task_modal_<%= task.id %>').showModal()" title="Читать / Редактировать">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
@@ -105,21 +101,21 @@
 
               <div class="bg-base-200/50 p-2 mt-auto border-t border-base-200 flex flex-col gap-1 rounded-b-xl">
                 <% case task.status %>
-                <% when "To Do" %>
-                  <%= button_to "В работу", project_task_path(@project, task), method: :patch, params: { task: { status: "In Progress" } }, class: "btn btn-xs btn-primary w-full text-[10px]" %>
-                <% when "In Progress" %>
+                <% when "to_do" %>
+                  <%= button_to "В работу", project_task_path(@project, task), method: :patch, params: { task: { status: "in_progress" } }, class: "btn btn-xs btn-primary w-full text-[10px]" %>
+                <% when "in_progress" %>
                   <div class="flex gap-1">
-                    <%= button_to "Назад", project_task_path(@project, task), method: :patch, params: { task: { status: "To Do" } }, class: "btn btn-xs btn-outline flex-1 text-[10px]" %>
-                    <%= button_to "Тест", project_task_path(@project, task), method: :patch, params: { task: { status: "In Testing" } }, class: "btn btn-xs btn-warning flex-1 text-[10px]" %>
+                    <%= button_to "Назад", project_task_path(@project, task), method: :patch, params: { task: { status: "to_do" } }, class: "btn btn-xs btn-outline flex-1 text-[10px]" %>
+                    <%= button_to "Тест", project_task_path(@project, task), method: :patch, params: { task: { status: "in_testing" } }, class: "btn btn-xs btn-warning flex-1 text-[10px]" %>
                   </div>
-                <% when "In Testing" %>
+                <% when "in_testing" %>
                   <div class="flex gap-1">
-                    <%= button_to "Отклон.", project_task_path(@project, task), method: :patch, params: { task: { status: "Rejected" } }, class: "btn btn-xs btn-error flex-1 text-[10px]" %>
-                    <%= button_to "Готово", project_task_path(@project, task), method: :patch, params: { task: { status: "Done" } }, class: "btn btn-xs btn-success flex-1 text-[10px]" %>
+                    <%= button_to "Отклон.", project_task_path(@project, task), method: :patch, params: { task: { status: "rejected" } }, class: "btn btn-xs btn-error flex-1 text-[10px]" %>
+                    <%= button_to "Готово", project_task_path(@project, task), method: :patch, params: { task: { status: "done" } }, class: "btn btn-xs btn-success flex-1 text-[10px]" %>
                   </div>
-                <% when "Rejected" %>
-                  <%= button_to "В работу", project_task_path(@project, task), method: :patch, params: { task: { status: "In Progress" } }, class: "btn btn-xs btn-primary w-full text-[10px]" %>
-                <% when "Done" %>
+                <% when "rejected" %>
+                  <%= button_to "В работу", project_task_path(@project, task), method: :patch, params: { task: { status: "in_progress" } }, class: "btn btn-xs btn-primary w-full text-[10px]" %>
+                <% when "done" %>
                   <div class="text-[10px] font-bold text-success text-center">Завершено</div>
                 <% end %>
               </div>
@@ -137,7 +133,7 @@
                     </div>
                     <div class="form-control w-full md:w-1/3">
                       <%= f.label :status, "Статус", class: "label font-semibold" %>
-                      <%= f.select :status, ['To Do', 'In Progress', 'In Testing', 'Done', 'Rejected'], {}, class: "select select-bordered w-full" %>
+                      <%= f.select :status, [['To Do', 'to_do'], ['In Progress', 'in_progress'], ['In Testing', 'in_testing'], ['Done', 'done'], ['Rejected', 'rejected']], {}, class: "select select-bordered w-full" %>
                     </div>
                   </div>
                   
@@ -157,12 +153,9 @@
                 <button>close</button>
               </form>
             </dialog>
-
           <% end %>
-
         </div>
       <% end %>
     </div>
-
   </div>
 </div>

@@ -10,7 +10,7 @@ RSpec.describe "TasksController", type: :request do
     context "с валидными данными" do
       it "создает новую задачу и возвращает на страницу проекта" do
         expect {
-          post project_tasks_path(project), params: { task: { title: "Сделать тесты", status: "To Do", description: "Нужно покрытие 100%" } }
+          post project_tasks_path(project), params: { task: { title: "Сделать тесты", status: "to_do", description: "Нужно покрытие 100%" } }
         }.to change(Task, :count).by(1)
         expect(response).to redirect_to(project_path(project))
       end
@@ -19,7 +19,7 @@ RSpec.describe "TasksController", type: :request do
     context "с невалидными данными" do
       it "не создает задачу без названия" do
         expect {
-          post project_tasks_path(project), params: { task: { title: "", status: "To Do" } }
+          post project_tasks_path(project), params: { task: { title: "", status: "to_do" } }
         }.not_to change(Task, :count)
       end
     end
@@ -27,9 +27,9 @@ RSpec.describe "TasksController", type: :request do
 
   describe "PATCH /projects/:project_id/tasks/:id (Обновление)" do
     it "обновляет статус задачи (двигаем по канбану) и возвращает на страницу проекта" do
-      patch project_task_path(project, task), params: { task: { status: "In Progress" } }
+      patch project_task_path(project, task), params: { task: { status: "in_progress" } }
       task.reload
-      expect(task.status).to eq("In Progress")
+      expect(task.status).to eq("in_progress")
       expect(response).to redirect_to(project_path(project))
     end
 

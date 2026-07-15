@@ -73,7 +73,7 @@ RSpec.describe "ProjectsController", type: :request do
             post projects_path, params: { project: { title: "" } }
           }.not_to change(Project, :count)
 
-          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response).to have_http_status(:unprocessable_content)
         end
       end
     end
