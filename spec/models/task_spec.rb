@@ -5,7 +5,6 @@ RSpec.describe Task, type: :model do
     it { should validate_presence_of(:title) }
     it { should validate_presence_of(:description) }
 
-    # Проверяем, что разрешены только конкретные статусы
     it { should validate_inclusion_of(:status).in_array([ "To Do", "In Progress", "In Testing", "Rejected", "Done" ]) }
   end
 
@@ -14,11 +13,7 @@ RSpec.describe Task, type: :model do
   end
 
   describe 'правила перехода статусов' do
-    let(:user) { User.create!(email: 'test@mail.com', password: 'password123') }
-    let(:project) { Project.create!(title: 'Проект', description: 'Описание проекта', user: user) }
-
-    # Теперь передаем description при создании задачи и используем твои строковые статусы!
-    let(:task) { Task.create!(title: 'Задача', description: 'Текст задачи', status: 'To Do', project: project) }
+    let(:task) { create(:task, status: 'To Do') }
 
     context 'когда статус To Do' do
       it 'разрешает переход в In Progress' do
@@ -29,6 +24,42 @@ RSpec.describe Task, type: :model do
       it 'запрещает переход сразу в Done' do
         task.status = 'Done'
         expect(task).not_to be_valid
+      end
+    end
+
+    context 'когда статус In Testing' do
+      before { task.update_column(:status, 'In Testing') }
+
+      it 'разрешает переход в Done' do
+        task.status = 'Done'
+        expect(task).to be_valid
+      end
+
+      it 'разрешает переход в Rejected' do
+        task.status = 'Rejected'
+        expect(task).to be_valid
+      end
+
+      it 'запрещает возврат в To Do' do
+        task.status = 'To Do'
+        expect(task).not_to be_valid
+        # Проверяем не просто факт невалидности, но и сам текст ошибки
+        expect(task.errors[:status]).to include("статус In Testing можно изменить только на Done или Rejected")
+      end
+    end
+
+    context 'когда статус Rejected' do
+      before { task.update_column(:status, 'Rejected') }
+
+      it 'разрешает возврат в In Progress' do
+        task.status = 'In Progress'
+        expect(task).to be_valid
+      end
+
+      it 'запрещает переход сразу в Done' do
+        task.status = 'Done'
+        expect(task).not_to be_valid
+        expect(task.errors[:status]).to include("статус Rejected можно изменить только на In Progress")
       end
     end
 

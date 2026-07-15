@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <!-- Имя на вкладке браузера -->
     <title><%= content_for(:title) || "Менеджер проектов" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <!-- Системное имя -->
     <meta name="application-name" content="Менеджер проектов">
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
@@ -13,7 +11,6 @@
 
     <%= yield :head %>
 
-    <!-- Иконка-ракета (Favicon) -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📦</text></svg>">
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📦</text></svg>">
 
@@ -23,11 +20,9 @@
 
   <body class="bg-base-200 min-h-screen flex flex-col font-sans">
     
-    <!-- НАВИГАЦИЯ -->
     <% if user_signed_in? %>
       <div class="navbar bg-base-100 shadow-sm border-b border-base-300 sticky top-0 z-40 px-4 md:px-8">
         <div class="flex-1">
-          <!-- Логотип и текст в шапке -->
           <%= link_to root_path, class: "btn btn-ghost text-xl gap-2 px-2" do %>
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
             Менеджер проектов
@@ -43,7 +38,6 @@
       </div>
     <% end %>
 
-    <!-- ВСПЛЫВАЮЩИЕ УВЕДОМЛЕНИЯ -->
     <% if notice.present? || alert.present? %>
       <div class="toast toast-bottom toast-end z-50 mb-8 mr-4" id="flash-toast">
         <% if notice.present? %>
@@ -73,7 +67,6 @@
       </script>
     <% end %>
 
-    <!-- ОСНОВНОЙ КОНТЕНТ -->
     <main class="grow">
       <%= yield %>
     </main>

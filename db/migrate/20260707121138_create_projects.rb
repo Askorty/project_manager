@@ -3,7 +3,6 @@ class CreateProjects < ActiveRecord::Migration[8.1]
     create_table :projects, id: :string do |t|
       t.string :title
       t.text :description
-      # Поменял type: :string, чтобы база ожидала string, а не неизвестный uuid
       t.references :user, type: :string, null: false, foreign_key: true
 
       t.timestamps

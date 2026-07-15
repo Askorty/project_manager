@@ -1,6 +1,6 @@
 class ProjectsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_project, only: [ :show, :edit, :update, :destroy ]
+  before_action :set_project, only: [ :show, :update, :destroy ]
   def index
     @projects = current_user.projects
   end
@@ -22,16 +22,11 @@ class ProjectsController < ApplicationController
   def show
   end
 
-  def edit
-    # Метод пуст, так как Ruby on Rails автоматически отрендерит edit.html.erb
-  end
-
   def update
     if @project.update(project_params)
       redirect_to @project, notice: "Проект обновлен."
     else
-      flash.now[:alert] = "Ошибка: #{@project.errors.full_messages.join(', ')}"
-      render :edit, status: :unprocessable_entity
+      redirect_to @project, alert: "Ошибка: #{@project.errors.full_messages.join(', ')}"
     end
   end
 
