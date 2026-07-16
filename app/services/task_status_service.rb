@@ -1,9 +1,15 @@
+# typed: true
+
 class TaskStatusService
+  extend T::Sig
+
+  sig { params(task: Task, new_status: String).void }
   def initialize(task, new_status)
     @task = task
     @new_status = new_status
   end
 
+  sig { returns(T::Boolean) }
   def call
     return true if @task.status == @new_status
     return false unless valid_transition?
@@ -14,6 +20,7 @@ class TaskStatusService
 
   private
 
+  sig { returns(T::Boolean) }
   def valid_transition?
     case @task.status
     when Task::STATUS_TO_DO
@@ -31,6 +38,7 @@ class TaskStatusService
     end
   end
 
+  sig { params(allowed_statuses: T::Array[String], error_msg: String).returns(T::Boolean) }
   def check_transition(allowed_statuses, error_msg)
     if allowed_statuses.include?(@new_status)
       true

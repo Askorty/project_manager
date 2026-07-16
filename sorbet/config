@@ -1,0 +1,10 @@
+--dir
+.
+--ignore=tmp/
+--ignore=vendor/
+--ignore=config/
+--ignore=db/
+--ignore=spec/
+--parser=prism
+--suppress-payload-superclass-redefinition-for=Net::IMAP::Literal
+--suppress-payload-superclass-redefinition-for=Net::IMAP::QuotedString

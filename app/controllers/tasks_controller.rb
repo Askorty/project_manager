@@ -1,3 +1,5 @@
+# typed: true
+
 class TasksController < ApplicationController
   before_action :authenticate_user!
   before_action :set_project
@@ -37,7 +39,7 @@ class TasksController < ApplicationController
   private
 
   def set_project
-    @project = current_user.projects.find(params[:project_id])
+    @project = T.must(current_user).projects.find(params[:project_id])
   end
 
   def set_task

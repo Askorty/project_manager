@@ -1,8 +1,10 @@
+# typed: true
+
 class ProjectsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_project, only: [ :show, :update, :destroy ]
   def index
-    @projects = current_user.projects
+    @projects = T.must(current_user).projects
   end
 
   def new
@@ -11,7 +13,7 @@ class ProjectsController < ApplicationController
 
   def create
     @project = Project.new(project_params)
-    @project.user_id = current_user.id
+    @project.user_id = T.must(current_user).id
     if @project.save
       redirect_to @project
     else
@@ -42,6 +44,6 @@ class ProjectsController < ApplicationController
   end
 
   def set_project
-    @project = current_user.projects.find(params[:id])
+    @project = T.must(current_user).projects.find(params[:id])
   end
 end

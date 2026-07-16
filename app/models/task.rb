@@ -1,3 +1,5 @@
+# typed: true
+
 class Task < ApplicationRecord
   belongs_to :project
 
