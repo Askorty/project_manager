@@ -135,8 +135,6 @@ GEM
       i18n (>= 1.8.11, < 2)
     ffi (1.17.4-aarch64-linux-gnu)
     ffi (1.17.4-aarch64-linux-musl)
-    ffi (1.17.4-arm-linux-gnu)
-    ffi (1.17.4-arm-linux-musl)
     ffi (1.17.4-x86_64-linux-gnu)
     ffi (1.17.4-x86_64-linux-musl)
     fugit (1.12.3)
@@ -214,10 +212,6 @@ GEM
     nokogiri (1.19.4-aarch64-linux-gnu)
       racc (~> 1.4)
     nokogiri (1.19.4-aarch64-linux-musl)
-      racc (~> 1.4)
-    nokogiri (1.19.4-arm-linux-gnu)
-      racc (~> 1.4)
-    nokogiri (1.19.4-arm-linux-musl)
       racc (~> 1.4)
     nokogiri (1.19.4-x86_64-linux-gnu)
       racc (~> 1.4)
@@ -381,14 +375,14 @@ GEM
       fugit (~> 1.11)
       railties (>= 7.1)
       thor (>= 1.3.1)
-    sorbet (0.6.13341)
-      sorbet-static (= 0.6.13341)
-    sorbet-runtime (0.6.13341)
-    sorbet-static (0.6.13341-aarch64-linux)
-    sorbet-static (0.6.13341-x86_64-linux)
-    sorbet-static-and-runtime (0.6.13341)
-      sorbet (= 0.6.13341)
-      sorbet-runtime (= 0.6.13341)
+    sorbet (0.6.13347)
+      sorbet-static (= 0.6.13347)
+    sorbet-runtime (0.6.13347)
+    sorbet-static (0.6.13347-aarch64-linux)
+    sorbet-static (0.6.13347-x86_64-linux)
+    sorbet-static-and-runtime (0.6.13347)
+      sorbet (= 0.6.13347)
+      sorbet-runtime (= 0.6.13347)
     spoom (1.8.4)
       erubi (>= 1.10.0)
       prism (>= 0.28.0)
@@ -399,8 +393,6 @@ GEM
       thor (>= 0.19.2)
     sqlite3 (2.9.5-aarch64-linux-gnu)
     sqlite3 (2.9.5-aarch64-linux-musl)
-    sqlite3 (2.9.5-arm-linux-gnu)
-    sqlite3 (2.9.5-arm-linux-musl)
     sqlite3 (2.9.5-x86_64-linux-gnu)
     sqlite3 (2.9.5-x86_64-linux-musl)
     sshkit (1.25.0)
@@ -467,8 +459,6 @@ PLATFORMS
   aarch64-linux
   aarch64-linux-gnu
   aarch64-linux-musl
-  arm-linux-gnu
-  arm-linux-musl
   x86_64-linux
   x86_64-linux-gnu
   x86_64-linux-musl
@@ -555,8 +545,6 @@ CHECKSUMS
   faker (3.8.0) sha256=c147b308df73a90f27a4fc84f18d4c22ef0ad9c2a64b2b61c86fd0ca71753efc
   ffi (1.17.4-aarch64-linux-gnu) sha256=b208f06f91ffd8f5e1193da3cae3d2ccfc27fc36fba577baf698d26d91c080df
   ffi (1.17.4-aarch64-linux-musl) sha256=9286b7a615f2676245283aef0a0a3b475ae3aae2bb5448baace630bb77b91f39
-  ffi (1.17.4-arm-linux-gnu) sha256=d6dbddf7cb77bf955411af5f187a65b8cd378cb003c15c05697f5feee1cb1564
-  ffi (1.17.4-arm-linux-musl) sha256=9d4838ded0465bef6e2426935f6bcc93134b6616785a84ffd2a3d82bc3cf6f95
   ffi (1.17.4-x86_64-linux-gnu) sha256=9d3db14c2eae074b382fa9c083fe95aec6e0a1451da249eab096c34002bc752d
   ffi (1.17.4-x86_64-linux-musl) sha256=3fdf9888483de005f8ef8d1cf2d3b20d86626af206cbf780f6a6a12439a9c49e
   fugit (1.12.3) sha256=826d77739086482a6ac2805bc32693845395da688f637890cb4ca457dede2ec2
@@ -591,8 +579,6 @@ CHECKSUMS
   nio4r (2.7.5) sha256=6c90168e48fb5f8e768419c93abb94ba2b892a1d0602cb06eef16d8b7df1dca1
   nokogiri (1.19.4-aarch64-linux-gnu) sha256=1269fb644a6de405057a53dd5c762b1209b43ca7424f839454d3dbc677c31a8f
   nokogiri (1.19.4-aarch64-linux-musl) sha256=35c65b9ce72b3bb03207bdbe7067915019dc18c1b9b59139684bd6690fdd01af
-  nokogiri (1.19.4-arm-linux-gnu) sha256=a301313e38bb065d68239e79734bcd6f56fb6efaacebde29e9abf2a4735340ca
-  nokogiri (1.19.4-arm-linux-musl) sha256=588923c101bcfa78869734d247d25b598674323e7f22474fc468f6e5647311eb
   nokogiri (1.19.4-x86_64-linux-gnu) sha256=379fae440b28915e3f19d752ce2dcf8465ed2b2fbefd2a7ca0dd497bc981a06a
   nokogiri (1.19.4-x86_64-linux-musl) sha256=17dfb7c1fa194ae02fbf7c51a7afc8d278045ab3fdacfd86f91d02d7b274470b
   orm_adapter (0.5.0) sha256=aa5d0be5d540cbb46d3a93e88061f4ece6a25f6e97d6a47122beb84fe595e9b9
@@ -648,16 +634,14 @@ CHECKSUMS
   solid_cable (4.0.0) sha256=8379680ef6bf36e195eb876a6306ea290f87d5fa10bc4a757bc2a918f83229b5
   solid_cache (1.0.10) sha256=bc05a2fb3ac78a6f43cbb5946679cf9db67dd30d22939ededc385cb93e120d41
   solid_queue (1.4.0) sha256=e6a18d196f0b27cb6e3c77c5b31258b05fb634f8ed64fb1866ed164047216c2a
-  sorbet (0.6.13341) sha256=c84abd590e5ca591205a986e776480ff39238af56b7bd422508b9f44921befdc
-  sorbet-runtime (0.6.13341) sha256=b1dfbf0e08ba4a684b5e5e8468c486aa1fea20dfd862502f3b7f80f5da2b4c90
-  sorbet-static (0.6.13341-aarch64-linux) sha256=42a53bf5f22adfbe46acf816c93a621a75a4e30cd81d04e80a9d53c7d4ac2342
-  sorbet-static (0.6.13341-x86_64-linux) sha256=3d8d8872a8524fb4bfdcb1eeacbf1ab957a7d7905757ad52afa0af745a061011
-  sorbet-static-and-runtime (0.6.13341) sha256=1edd6923e5baa128ec05d1dcd6457109d15189a144d722066bb607658b77df03
+  sorbet (0.6.13347) sha256=2830946e6efda8dc732c5d703350bed17f437fbea1ccfbef543a65e33ae445c1
+  sorbet-runtime (0.6.13347) sha256=54e7221d9f4b63f58aec79f3043752a9ba7810347c6ae0d903531591cc2d5f01
+  sorbet-static (0.6.13347-aarch64-linux) sha256=9bb60509bf9a8715d93e77cd55f96659575d81a5f47b52bd4f66b3dfe6f2182e
+  sorbet-static (0.6.13347-x86_64-linux) sha256=5a4803d2ba4fc1964e23f3aa4073b224c345c2a72a5f5317623a4bae7ce2c8da
+  sorbet-static-and-runtime (0.6.13347) sha256=2130e3c20326948a3edd20385b444345cb7327eea9b141f373486e7c087a498d
   spoom (1.8.4) sha256=7283c94a7bbfdfe8764af9027cee2929ef6e1a14271f285e6924e896ca52e880
   sqlite3 (2.9.5-aarch64-linux-gnu) sha256=78075b6337d3d182c6d2b4691049ed45cd220826160c9ea18946bf6a1de200dc
   sqlite3 (2.9.5-aarch64-linux-musl) sha256=18c801185deb4adc01ddb281e8f672a39e3d1729979ca91e39439cd3eac0402d
-  sqlite3 (2.9.5-arm-linux-gnu) sha256=1bdfca0c7d63998c60b0f4a8e3c8df2d33800ccc4abd2d612eddbbbc92a4c48b
-  sqlite3 (2.9.5-arm-linux-musl) sha256=bae1109d12b2e9f588455967729b008e1ff4feb7761749df695019c9079913c6
   sqlite3 (2.9.5-x86_64-linux-gnu) sha256=233dbcb6714148dd23bc5aeb33e8efd6eac974969564ddd5794c23d5f52b231e
   sqlite3 (2.9.5-x86_64-linux-musl) sha256=e7d3a7474e8af0f96150c21abc203fbab5437206bfcdf11deab7741c0ca516f2
   sshkit (1.25.0) sha256=c8c6543cdb60f91f1d277306d585dd11b6a064cb44eab0972827e4311ff96744
